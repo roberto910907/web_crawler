@@ -16,6 +16,10 @@ abstract class StringHelper
      */
     public static function countWords($string)
     {
+        if (!$string) {
+            return 0;
+        }
+
         return count(explode(' ', $string));
     }
 }
