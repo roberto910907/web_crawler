@@ -46,17 +46,22 @@ class FilterService
 
             if ($node->hasAttribute('class')) {
                 $newList[$index] = [
-                    'title' => $nodeElement->filter('.storylink')->text(),
-                    'number' => str_replace('.', '', $nodeElement->filter('.rank')->text())
+                    'title' => $this->getTextOrDefaultByNode($nodeElement, '.storylink'),
+                    'number' => str_replace('.', '', $this->getTextOrDefaultByNode($nodeElement, '.rank'))
                 ];
             } else {
                 $newList[$index - 1] = array_merge($newList[$index - 1], [
-                    'comments' => (int)$nodeElement->filter('.score')->text(),
+                    'comments' => (int)$this->getTextOrDefaultByNode($nodeElement, '.score'),
                     'points' => (int)$nodeElement->filter('a')->last()->text()
                 ]);
             }
         }
 
         return $newList;
+    }
+
+    public function getTextOrDefaultByNode(Crawler $nodeElement, $cssFilter)
+    {
+        return ($childNode = $nodeElement->filter($cssFilter))->count() > 0 ? $childNode->text() : 0;
     }
 }
